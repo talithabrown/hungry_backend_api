@@ -18,6 +18,8 @@ django-cors-headers = "*"
 redis = "*"
 celery = "*"
 flower = "*"
+whitenoise = "*"
+gunicorn = "*"
 
 [dev-packages]
 pytest = "*"
