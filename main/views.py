@@ -129,10 +129,13 @@ class CartItemViewSet(ModelViewSet):
         return CartItemSerializer
 
     def get_queryset(self):
-        return CartItem.objects.filter(cart_id=self.kwargs['cart_pk']).select_related('post')
+        # return CartItem.objects.filter(cart_id=self.kwargs['cart_pk']).select_related('post')
+        cart_id = Cart.objects.only('id').get(uuid=self.kwargs['cart_pk'])
+        return CartItem.objects.filter(cart_id=cart_id).select_related('post')
 
     def get_serializer_context(self):
-        return {'cart_id': self.kwargs['cart_pk']}
+        cart_id = Cart.objects.only('id').get(uuid=self.kwargs['cart_pk'])
+        return {'cart_id': cart_id}
 
 
 
