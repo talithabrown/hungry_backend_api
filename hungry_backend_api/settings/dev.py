@@ -19,3 +19,5 @@ DATABASES = {
         'PASSWORD': 'Band@1014'
     }
 }
+
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
