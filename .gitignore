@@ -2,7 +2,3 @@
 /media/
 /static/
 general.log
-hungry_backend_api/hungry_backend_api/settings/dev.py
-
-
-git rm --cached hungry_backend_api/hungry_backend_api/settings/dev.py
