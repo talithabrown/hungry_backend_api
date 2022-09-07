@@ -2,3 +2,4 @@
 /media/
 /static/
 general.log
+hungry_backend_api/settings/dev.py
