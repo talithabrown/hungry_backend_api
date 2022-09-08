@@ -20,8 +20,8 @@ celery = "*"
 flower = "*"
 whitenoise = "*"
 gunicorn = "*"
-dj-database-url = "*"
 psycopg2-binary = "*"
+dj-database-url = "*"
 
 [dev-packages]
 pytest = "*"
