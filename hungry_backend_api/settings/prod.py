@@ -7,7 +7,7 @@ DEBUG = False
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
-ALLOWED_HOSTS = ['hungry-backend-api.herokuapp.com']
+ALLOWED_HOSTS = ['hungry-backend-api.herokuapp.com', 'localhost:3000']
 
 DATABASES = {
     'default': dj_database_url.config()
