@@ -22,6 +22,7 @@ whitenoise = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
 dj-database-url = "*"
+django-cloudinary-storage = "*"
 
 [dev-packages]
 pytest = "*"
