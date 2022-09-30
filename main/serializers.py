@@ -24,13 +24,20 @@ class PostImageSerializer(serializers.ModelSerializer):
         return PostImage.objects.create(post_id=post_id, **validated_data)
 
 
+class PostIngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = ['id', 'name']
+
+
 
 class PostSerializer(serializers.ModelSerializer):
     images = PostImageSerializer(many=True, read_only=True)
+    ingredients = PostIngredientSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'description', 'delivery', 'pick_up', 'price', 'price_with_tax', 'ready_date_time', 'servings_available', 'location', 'last_update', 'categories', 'ingredients', 'user', 'images']
+        fields = ['id', 'title', 'description', 'delivery', 'pick_up', 'price', 'price_with_tax', 'ready_date_time', 'servings_available', 'location', 'last_update', 'ingredients', 'user', 'images']
     
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
     # # user = serializers.StringRelatedField()

@@ -45,7 +45,8 @@ class UserProfileViewSet(ModelViewSet):
 
 
 class PostViewSet(ModelViewSet):
-    queryset = Post.objects.prefetch_related('images').all()
+    # queryset = Post.objects.prefetch_related('images').all()
+    queryset = Post.objects.prefetch_related('images').prefetch_related('ingredients').select_related('user').all()
     serializer_class = PostSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = PostFilter
