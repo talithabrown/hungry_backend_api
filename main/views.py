@@ -18,9 +18,14 @@ from .permissions import IsAdminOrReadOnly, FullDjangoModelPermissions, ViewUser
 
 
 class UserProfileViewSet(ModelViewSet):
-    queryset = UserProfile.objects.all()
+    queryset = UserProfile.objects.select_related('user').all()
     serializer_class = UserProfileSerializer
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
+
+    # def get_serializer_context(self):
+    #     if self.request.method == 'POST':
+    #         return {'user_id': self.request.body.user.id}
+    #     return
 
     @action(detail=True, permission_classes=[ViewUserProfileHistoryPermission])
     def history(self, request, pk):
@@ -70,6 +75,12 @@ class PostViewSet(ModelViewSet):
             return Response({'error': 'Post cannot be deleted because it is associated with an order item'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().destroy(request, *args, **kwargs)
 
+
+class UserProfilePostsViewSet(ModelViewSet):
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        return Post.objects.prefetch_related('images').prefetch_related('ingredients').filter(user=self.kwargs['userprofile_pk'])
 
 
 class PostImageViewSet(ModelViewSet):

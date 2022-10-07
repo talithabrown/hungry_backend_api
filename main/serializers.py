@@ -10,7 +10,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'user_id', 'bio', 'phone', 'birth_date', 'is_seller']
+        fields = ['id', 'user_id', 'first_name', 'bio', 'image', 'phone', 'birth_date', 'is_seller']
+
+    # def user_id(self):
+    #     if self.context['user_id']:
+    #         return self.context['user_id']
+    #     return serializers.IntegerField(read_only=True)
+
+    def first_name(self):
+        return self.user.first_name
 
 
 

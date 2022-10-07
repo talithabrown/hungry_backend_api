@@ -19,6 +19,7 @@ class UserProfile(models.Model):
     birth_date = models.DateField(null=True, blank=True)
     is_seller = models.BooleanField(default=False)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='profiles/images', validators=[validate_file_size], null=True)
     # address
 
     def __str__(self) -> str:
@@ -41,7 +42,9 @@ class UserProfile(models.Model):
             ('view_history', 'Can view history')
         ]
 
-
+# class ProfileImage(models.Model):
+#     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='image')
+#     image = models.ImageField(upload_to='profiles/images', validators=[validate_file_size])
 
 class Address(models.Model):
     address_1 = models.CharField(max_length=255)

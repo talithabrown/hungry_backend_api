@@ -19,4 +19,7 @@ posts_router.register('images', views.PostImageViewSet, basename='post-images')
 carts_router = routers.NestedDefaultRouter(router, 'carts', lookup='cart')
 carts_router.register('items', views.CartItemViewSet, basename='cart-items')
 
-urlpatterns = router.urls + posts_router.urls + carts_router.urls
+userprofiles_router = routers.NestedDefaultRouter(router, 'userprofiles', lookup='userprofile')
+userprofiles_router.register('posts', views.UserProfilePostsViewSet, basename='userprofile-posts')
+
+urlpatterns = router.urls + posts_router.urls + carts_router.urls + userprofiles_router.urls
