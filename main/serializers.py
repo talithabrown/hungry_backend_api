@@ -32,10 +32,15 @@ class PostImageSerializer(serializers.ModelSerializer):
         return PostImage.objects.create(post_id=post_id, **validated_data)
 
 
+
 class PostIngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = ['id', 'name']
+
+    def create(self, validated_data):
+        post_id = self.context['post_id']
+        return Ingredient.objects.create(post_id=post_id, **validated_data)
 
 
 

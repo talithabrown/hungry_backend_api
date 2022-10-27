@@ -8,9 +8,9 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveMode
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework import status
-from .models import Category, Order, OrderItem, Post, Review, Cart, CartItem, UserProfile, PostImage
+from .models import Category, Order, OrderItem, Post, Review, Cart, CartItem, UserProfile, PostImage, Ingredient
 from .filters import PostFilter
-from .serializers import AddCartItemSerializer, CartSerializer, CategorySerializer, CreateOrderSerializer, PostImageSerializer, PostSerializer, ReviewSerializer, CartItemSerializer, UpdateCartItemSerializer, UpdateOrderSerializer, UserProfileSerializer, OrderSerializer
+from .serializers import AddCartItemSerializer, CartSerializer, CategorySerializer, CreateOrderSerializer, PostImageSerializer, PostSerializer, ReviewSerializer, CartItemSerializer, UpdateCartItemSerializer, UpdateOrderSerializer, UserProfileSerializer, OrderSerializer, PostIngredientSerializer
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly, FullDjangoModelPermissions, ViewUserProfileHistoryPermission
 
@@ -91,6 +91,18 @@ class PostImageViewSet(ModelViewSet):
     
     def get_queryset(self):
         return PostImage.objects.filter(post_id=self.kwargs['post_pk'])
+
+
+
+class PostIngredientViewSet(ModelViewSet):
+    serializer_class = PostIngredientSerializer
+
+    def get_serializer_context(self):
+        return {'post_id': self.kwargs['post_pk']}
+    
+    def get_queryset(self):
+        return Ingredient.objects.filter(post_id=self.kwargs['post_pk'])
+
 
 
 

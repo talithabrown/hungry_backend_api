@@ -103,7 +103,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(models.Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    exclude = ['posts']
+    exclude = ['post']
     list_display = ['name']
     list_per_page = 20
     search_fields = ['name__istartswith']
