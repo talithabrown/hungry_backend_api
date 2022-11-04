@@ -86,6 +86,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class SimplePostSerializer(serializers.ModelSerializer):
+    images = PostImageSerializer(many=True, read_only=True)
     class Meta:
         model = Post
         fields =['id', 'title', 'price', 'images']
