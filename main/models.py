@@ -167,8 +167,7 @@ class OrderItem(models.Model):
 
 
 class Cart(models.Model):
-    #id = models.UUIDField(primary_key=True, default=uuid4)
-    uuid = models.UUIDField(default=uuid4, unique=True)
+    id = models.UUIDField(primary_key=True, default=uuid4)
     created_at = models.DateTimeField(auto_now_add=True)
     # items
 
