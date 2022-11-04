@@ -20,8 +20,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Cart',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.UUIDField(default=uuid.uuid4, unique=True)),
+                ('id', models.UUIDField(default=uuid.uuid4, primary_key=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
             ],
         ),

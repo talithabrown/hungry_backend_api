@@ -127,9 +127,9 @@ class CartItemInline(admin.TabularInline):
 
 @admin.register(models.Cart)
 class CartAdmin(admin.ModelAdmin):
-    list_display = ['created_at', 'id']
+    # list_display = ['created_at', 'id']
     list_per_page = 20
-    search_fields = ['id__istartswith', 'created_at__istartswith']
+    # search_fields = ['id__istartswith', 'created_at__istartswith']
     inlines = [CartItemInline]
 
 
