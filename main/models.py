@@ -72,7 +72,7 @@ class Post(models.Model):
     pick_up = models.BooleanField()
     price = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(0)])
     ready_date_time = models.DateTimeField()
-    servings_available = models.IntegerField()
+    servings_available = models.IntegerField(validators=[MinValueValidator(0)])
     location = models.CharField(max_length=255)
     last_update = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
