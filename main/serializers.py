@@ -10,7 +10,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'user_id', 'first_name', 'bio', 'image', 'phone', 'birth_date', 'is_seller']
+        fields = ['id', 'user_id', 'first_name', 'username', 'bio', 'image', 'phone', 'birth_date', 'is_seller']
 
     # def user_id(self):
     #     if self.context['user_id']:
@@ -19,6 +19,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     def first_name(self):
         return self.user.first_name
+
+
+
+class PostProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['id', 'username', 'image']
 
 
 
@@ -47,6 +54,7 @@ class PostIngredientSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     images = PostImageSerializer(many=True, read_only=True)
     ingredients = PostIngredientSerializer(many=True, read_only=True)
+    user = PostProfileSerializer(many=False, read_only=True)
 
     class Meta:
         model = Post
