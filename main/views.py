@@ -80,11 +80,15 @@ class PostViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = Post.objects.prefetch_related('images').prefetch_related('ingredients').select_related('user').all()
 
-        lat = float(self.request.query_params.get('lat'))
-        lon = float(self.request.query_params.get('lon'))
-        radius = float(self.request.query_params.get('radius'))
+        lat = self.request.query_params.get('lat')
+        lon = self.request.query_params.get('lon')
+        radius = self.request.query_params.get('radius')
 
         if (lat is not None) and (lon is not None) and (radius is not None):
+
+            lat = float(lat)
+            lon = float(lon)
+            radius = float(radius)
 
             R = 3959  #earth's mean radius in miles
             sin = math.sin
