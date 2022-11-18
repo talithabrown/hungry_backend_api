@@ -13,6 +13,8 @@ from .filters import PostFilter
 from .serializers import AddCartItemSerializer, CartSerializer, CategorySerializer, CreateOrderSerializer, PostImageSerializer, PostSerializer, ReviewSerializer, CartItemSerializer, UpdateCartItemSerializer, UpdateOrderSerializer, UserProfileSerializer, OrderSerializer, PostIngredientSerializer
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly, FullDjangoModelPermissions, ViewUserProfileHistoryPermission
+import math
+from django.db.models import F, Func
 
 # Create your views here.
 
@@ -49,9 +51,9 @@ class UserProfileViewSet(ModelViewSet):
             return Response(serializer.data)
 
 
+
 class PostViewSet(ModelViewSet):
-    # queryset = Post.objects.prefetch_related('images').all()
-    queryset = Post.objects.prefetch_related('images').prefetch_related('ingredients').select_related('user').all()
+    # queryset = Post.objects.prefetch_related('images').prefetch_related('ingredients').select_related('user').all()
     serializer_class = PostSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = PostFilter
@@ -74,6 +76,55 @@ class PostViewSet(ModelViewSet):
         if OrderItem.objects.filter(post_id=kwargs['pk']).count() > 0:
             return Response({'error': 'Post cannot be deleted because it is associated with an order item'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().destroy(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = Post.objects.prefetch_related('images').prefetch_related('ingredients').select_related('user').all()
+
+        lat = float(self.request.query_params.get('lat'))
+        lon = float(self.request.query_params.get('lon'))
+        radius = float(self.request.query_params.get('radius'))
+
+        if (lat is not None) and (lon is not None) and (radius is not None):
+
+            R = 3959  #earth's mean radius in miles
+            sin = math.sin
+            cos = math.cos
+            acos = math.acos
+            pi = math.pi
+
+            minLat = lat - radius/R*180/pi
+            maxLat = lat + radius/R*180/pi
+            minLon = lon - radius/R*180/pi / cos(lat*pi/180)
+            maxLon = lon + radius/R*180/pi / cos(lat*pi/180)
+
+            queryset = queryset.filter(latitude__gt=minLat, latitude__lt=maxLat, longitude__gt=minLon, longitude__lt=maxLon)
+
+            # for p in queryset:
+            #     latitude = float(p.latitude)
+            #     longitude = float(p.longitude)
+            #     p.d = acos(sin(latitude*pi/180)*sin(lat*pi/180) + cos(latitude*pi/180)*cos(lat*pi/180)*cos(longitude*pi/180-lon*pi/180)) * R
+
+            #     acos(sin(float(p.latitude)*pi/180)*sin(lat*pi/180) + cos(float(p.latitude)*pi/180)*cos(lat*pi/180)*cos(float(p.longitude)*pi/180-lon*pi/180)) * R
+
+            # def filter_distance(p):
+            #     if (p.d < radius ):
+            #         return True
+            #     else:
+            #         return False
+
+            # def calculate_distance(latitude, longitude):
+            #     distance = acos(sin(float(latitude)*pi/180)*sin(lat*pi/180) + cos(float(latitude)*pi/180)*cos(lat*pi/180)*cos(float(longitude)*pi/180-lon*pi/180)) * R
+            #     return distance
+
+            # queryset.annotate(distance=Func(F('latitude'), F('longitude')), function=calculate_distance)
+
+            # # queryset = filter(filter_distance, queryset)
+            # # queryset = queryset.filter(acos(sin(float(p.latitude)*pi/180)*sin(lat*pi/180) + cos(float(p.latitude)*pi/180)*cos(lat*pi/180)*cos(float(p.longitude)*pi/180-lon*pi/180)) * R__lt=radius)
+
+        return queryset
+
+        # For latitudes use: Decimal(8,6), and longitudes use: Decimal(9,6)
+        # http://127.0.0.1:8000/main/posts/?lat=34.4691131&lon=-110.0921453&radius=10
 
 
 class UserProfilePostsViewSet(ModelViewSet):

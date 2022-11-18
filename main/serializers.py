@@ -58,7 +58,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'description', 'delivery', 'pick_up', 'price', 'price_with_tax', 'ready_date_time', 'servings_available', 'location', 'last_update', 'ingredients', 'user', 'images']
+        fields = ['id', 'title', 'description', 'delivery', 'pick_up', 'price', 'price_with_tax', 'ready_date_time', 'servings_available', 'location', 'latitude', 'longitude', 'last_update', 'ingredients', 'user', 'images']
     
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
     # # user = serializers.StringRelatedField()

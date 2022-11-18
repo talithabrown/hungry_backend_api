@@ -74,6 +74,8 @@ class Post(models.Model):
     ready_date_time = models.DateTimeField()
     servings_available = models.IntegerField(validators=[MinValueValidator(0)])
     location = models.CharField(max_length=255)
+    latitude = models.DecimalField(max_digits=8, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
     last_update = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     # categories
