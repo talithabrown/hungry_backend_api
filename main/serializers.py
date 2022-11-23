@@ -54,13 +54,16 @@ class PostIngredientSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     images = PostImageSerializer(many=True, read_only=True)
     ingredients = PostIngredientSerializer(many=True, read_only=True)
-    user = PostProfileSerializer(many=False, read_only=True)
+    #user = PostProfileSerializer(many=False, read_only=True)
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'description', 'delivery', 'pick_up', 'price', 'price_with_tax', 'ready_date_time', 'servings_available', 'location', 'latitude', 'longitude', 'last_update', 'ingredients', 'user', 'images']
+        fields = ['id', 'title', 'description', 'delivery', 'pick_up', 'price', 'price_with_tax', 'ready_date_time', 'servings_available', 'location', 'latitude', 'longitude', 'last_update', 'ingredients', 'user', 'user_info', 'images']
     
     price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
+
+    user_info = serializers.SerializerMethodField(method_name='get_post_profile_serializer')
+
     # # user = serializers.StringRelatedField()
     # # user = UserProfileSerializer()
     # user = serializers.HyperlinkedRelatedField(
@@ -70,6 +73,10 @@ class PostSerializer(serializers.ModelSerializer):
 
     def calculate_tax(self, post: Post):
         return post.price * Decimal(1.1)
+
+    def get_post_profile_serializer(self, post: Post):
+        return { "username": post.user.user.username,
+                 "image": str(post.user.image) }
 
 
 
