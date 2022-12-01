@@ -184,10 +184,19 @@ class ReviewViewSet(ModelViewSet):
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
-        return Review.objects.filter(post_id=self.kwargs['post_pk'])
+        queryset = Review.objects.all().select_related('post')
 
-    def get_serializer_context(self):
-        return {'post_id': self.kwargs['post_pk']}
+        post_id = self.request.query_params.get('post')
+        profile_id = self.request.query_params.get('profile')
+
+        if post_id is not None:
+            post_id = int(post_id)
+            queryset = queryset.filter(post_id=post_id)
+        elif profile_id is not None:
+            profile_id = int(profile_id)
+            queryset = queryset.filter(post__user=profile_id)
+
+        return queryset
 
 
 

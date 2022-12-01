@@ -89,22 +89,28 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = ['id', 'rating', 'title', 'text', 'created', 'updated', 'reviewer_user']
-
-    def create(self, validated_data):
-        post_id = self.context['post_id']
-        return Review.objects.create(post_id=post_id, **validated_data)
-
-
-
 class SimplePostSerializer(serializers.ModelSerializer):
     images = PostImageSerializer(many=True, read_only=True)
     class Meta:
         model = Post
         fields =['id', 'title', 'price', 'images']
+
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Review
+        fields = ['id', 'post', 'post_title', 'rating', 'title', 'text', 'created', 'updated', 'reviewer_user', 'username']
+
+    username = serializers.SerializerMethodField(method_name='get_reviewer_username')
+    post_title = serializers.SerializerMethodField(method_name='get_post_title')
+
+    def get_reviewer_username(self, review: Review):
+        return review.reviewer_user.user.username
+
+    def get_post_title(self, review: Review):
+        return  review.post.title
 
 
 
