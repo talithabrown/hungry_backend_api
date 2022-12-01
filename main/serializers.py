@@ -12,11 +12,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['id', 'user_id', 'first_name', 'username', 'bio', 'image', 'phone', 'birth_date', 'is_seller']
 
-    # def user_id(self):
-    #     if self.context['user_id']:
-    #         return self.context['user_id']
-    #     return serializers.IntegerField(read_only=True)
-
     def first_name(self):
         return self.user.first_name
 

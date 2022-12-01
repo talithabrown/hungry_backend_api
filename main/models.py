@@ -128,7 +128,8 @@ class Review(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='reviews')
-    reviewer_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    reviewer_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='reviews_given')
+    reviewed_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='reviews_received')
 
     def __str__(self) -> str:
         return self.title
