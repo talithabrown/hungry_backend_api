@@ -188,6 +188,7 @@ class ReviewViewSet(ModelViewSet):
 
         post_id = self.request.query_params.get('post')
         profile_id = self.request.query_params.get('profile')
+        reviewer = self.request.query_params.get('reviewer')
 
         if post_id is not None:
             post_id = int(post_id)
@@ -195,6 +196,9 @@ class ReviewViewSet(ModelViewSet):
         elif profile_id is not None:
             profile_id = int(profile_id)
             queryset = queryset.filter(post__user=profile_id)
+        elif reviewer is not None:
+            reviewer = int(reviewer)
+            queryset = queryset.filter(reviewer_user=reviewer)
 
         return queryset
 
