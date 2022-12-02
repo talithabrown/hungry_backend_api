@@ -10,10 +10,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ['id', 'user_id', 'first_name', 'username', 'bio', 'image', 'phone', 'birth_date', 'is_seller']
+        fields = ['id', 'user_id', 'first_name', 'last_name', 'username', 'bio', 'image', 'phone', 'birth_date', 'is_seller']
 
-    def first_name(self):
-        return self.user.first_name
+    # def first_name(self):
+    #     return self.user.first_name
+
+    # def first_name(self):
+    #     return self.user.last_name
 
 
 
