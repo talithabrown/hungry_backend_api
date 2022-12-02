@@ -103,28 +103,6 @@ class PostViewSet(ModelViewSet):
 
             queryset = queryset.filter(latitude__gt=minLat, latitude__lt=maxLat, longitude__gt=minLon, longitude__lt=maxLon)
 
-            # for p in queryset:
-            #     latitude = float(p.latitude)
-            #     longitude = float(p.longitude)
-            #     p.d = acos(sin(latitude*pi/180)*sin(lat*pi/180) + cos(latitude*pi/180)*cos(lat*pi/180)*cos(longitude*pi/180-lon*pi/180)) * R
-
-            #     acos(sin(float(p.latitude)*pi/180)*sin(lat*pi/180) + cos(float(p.latitude)*pi/180)*cos(lat*pi/180)*cos(float(p.longitude)*pi/180-lon*pi/180)) * R
-
-            # def filter_distance(p):
-            #     if (p.d < radius ):
-            #         return True
-            #     else:
-            #         return False
-
-            # def calculate_distance(latitude, longitude):
-            #     distance = acos(sin(float(latitude)*pi/180)*sin(lat*pi/180) + cos(float(latitude)*pi/180)*cos(lat*pi/180)*cos(float(longitude)*pi/180-lon*pi/180)) * R
-            #     return distance
-
-            # queryset.annotate(distance=Func(F('latitude'), F('longitude')), function=calculate_distance)
-
-            # # queryset = filter(filter_distance, queryset)
-            # # queryset = queryset.filter(acos(sin(float(p.latitude)*pi/180)*sin(lat*pi/180) + cos(float(p.latitude)*pi/180)*cos(lat*pi/180)*cos(float(p.longitude)*pi/180-lon*pi/180)) * R__lt=radius)
-
         return queryset
 
         # For latitudes use: Decimal(8,6), and longitudes use: Decimal(9,6)
