@@ -84,6 +84,11 @@ class PostViewSet(ModelViewSet):
         lon = self.request.query_params.get('lon')
         radius = self.request.query_params.get('radius')
 
+        max_price = self.request.query_params.get('maxprice')
+        min_price = self.request.query_params.get('minprice')
+        delivery_options = self.request.query_params.get('deliveryoptions')
+        categories = self.request.query_params.get('categories')
+
         if (lat is not None) and (lon is not None) and (radius is not None):
 
             lat = float(lat)
@@ -103,10 +108,23 @@ class PostViewSet(ModelViewSet):
 
             queryset = queryset.filter(latitude__gt=minLat, latitude__lt=maxLat, longitude__gt=minLon, longitude__lt=maxLon)
 
+        if max_price is not None:
+            queryset = queryset.filter(price__lte=max_price)
+        if min_price is not None:
+            queryset = queryset.filter(price__gte=min_price)
+        if delivery_options is not None:
+            if delivery_options == 'both':
+                queryset = queryset.filter(delivery=True, pick_up=True)
+            elif delivery_options == 'delivery':
+                queryset = queryset.filter(delivery=True)
+            elif delivery_options == 'pickup':
+                queryset = queryset.filter(pick_up=True)
+
+
         return queryset
 
         # For latitudes use: Decimal(8,6), and longitudes use: Decimal(9,6)
-        # http://127.0.0.1:8000/main/posts/?lat=34.4691131&lon=-110.0921453&radius=10
+        # http://127.0.0.1:8000/main/posts/?lat=34.465037&lon=-110.091227&radius=10
 
 
 class UserProfilePostsViewSet(ModelViewSet):
