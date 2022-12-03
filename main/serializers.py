@@ -56,9 +56,9 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'description', 'delivery', 'pick_up', 'price', 'price_with_tax', 'ready_date_time', 'servings_available', 'location', 'latitude', 'longitude', 'last_update', 'ingredients', 'user', 'user_info', 'images']
+        fields = ['id', 'title', 'description', 'delivery', 'pick_up', 'price', 'ready_date_time', 'servings_available', 'location', 'latitude', 'longitude', 'last_update', 'ingredients', 'user', 'user_info', 'images', 'categories']
     
-    price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
+    #price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
 
     user_info = serializers.SerializerMethodField(method_name='get_post_profile_serializer')
 
@@ -69,8 +69,8 @@ class PostSerializer(serializers.ModelSerializer):
     #     view_name='user-profile-detail'
     # )
 
-    def calculate_tax(self, post: Post):
-        return post.price * Decimal(1.1)
+    # def calculate_tax(self, post: Post):
+    #     return post.price * Decimal(1.1)
 
     def get_post_profile_serializer(self, post: Post):
         return { "username": post.user.user.username,

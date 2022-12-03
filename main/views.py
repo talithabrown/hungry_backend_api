@@ -1,3 +1,4 @@
+from nis import cat
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
@@ -14,7 +15,8 @@ from .serializers import AddCartItemSerializer, CartSerializer, CategorySerializ
 from .pagination import DefaultPagination
 from .permissions import IsAdminOrReadOnly, FullDjangoModelPermissions, ViewUserProfileHistoryPermission
 import math
-from django.db.models import F, Func
+from django.db.models import Q
+from functools import reduce
 
 # Create your views here.
 
@@ -69,6 +71,34 @@ class PostViewSet(ModelViewSet):
     #         queryset = queryset.filter(categories=category_id)
     #     return queryset
 
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        user = UserProfile.objects.filter(pk=data['user']).first()
+        if data['delivery'] == 'true':
+            delivery = True
+        else:
+            delivery = False
+        if data['pick_up'] == 'true':
+            pick_up = True
+        else:
+            pick_up = False
+        new_post = Post.objects.create(title=data['title'], description=data['description'], delivery=delivery, pick_up=pick_up, price=data['price'], ready_date_time=data['ready_date_time'], servings_available=data['servings_available'], location=data['location'], latitude=data['latitude'], longitude=data['longitude'], user=user)
+        new_post.save()
+
+        for category in data['categories']:
+            cat_obj = Category.objects.get(pk=category)
+            new_post.categories.add(cat_obj)
+        
+        serializer = PostSerializer(new_post)
+
+        return Response(serializer.data)
+
+        # serializer = CreateOrderSerializer(data=request.data, context={'user_id': self.request.user.id})
+        # serializer.is_valid(raise_exception=True)
+        # order = serializer.save()
+        # serializer = OrderSerializer(order)
+        # return Response(serializer.data)
+
     def get_serializer_context(self):
         return {'request': self.request}
 
@@ -88,6 +118,7 @@ class PostViewSet(ModelViewSet):
         min_price = self.request.query_params.get('minprice')
         delivery_options = self.request.query_params.get('deliveryoptions')
         categories = self.request.query_params.get('categories')
+        search_words = self.request.query_params.get('searchwords')
 
         if (lat is not None) and (lon is not None) and (radius is not None):
 
@@ -119,6 +150,12 @@ class PostViewSet(ModelViewSet):
                 queryset = queryset.filter(delivery=True)
             elif delivery_options == 'pickup':
                 queryset = queryset.filter(pick_up=True)
+        if categories is not None:
+            categories = categories.split(',')
+            queryset = queryset.filter(categories__in=categories)
+        if search_words is not None:
+            search_words = search_words.split(',')
+            queryset = queryset.filter(reduce(lambda x, y: x | y, [Q(title__icontains=word) for word in search_words]))
 
 
         return queryset
@@ -160,7 +197,7 @@ class PostIngredientViewSet(ModelViewSet):
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.annotate(posts_count=Count('posts')).all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminOrReadOnly]
+    #permission_classes = [IsAdminOrReadOnly]
 
     # def destroy(self, request, *args, **kwargs):
     #     if Post.objects.filter(category_id=kwargs['pk']).count() > 0:
