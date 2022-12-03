@@ -152,7 +152,7 @@ class PostViewSet(ModelViewSet):
                 queryset = queryset.filter(pick_up=True)
         if categories is not None:
             categories = categories.split(',')
-            queryset = queryset.filter(categories__in=categories)
+            queryset = queryset.filter(categories__in=categories).distinct()
         if search_words is not None:
             search_words = search_words.split(',')
             queryset = queryset.filter(reduce(lambda x, y: x | y, [Q(title__icontains=word) for word in search_words]))
