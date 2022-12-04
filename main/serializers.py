@@ -91,7 +91,7 @@ class SimplePostSerializer(serializers.ModelSerializer):
     images = PostImageSerializer(many=True, read_only=True)
     class Meta:
         model = Post
-        fields =['id', 'title', 'price', 'images']
+        fields =['id', 'title', 'price', 'pick_up', 'delivery', 'location','images']
 
 
 
