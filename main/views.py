@@ -256,7 +256,7 @@ class CartItemViewSet(ModelViewSet):
     def get_queryset(self):
         # cart_id = Cart.objects.only('id').get(uuid=self.kwargs['cart_pk'])
         # return CartItem.objects.filter(cart_id=cart_id).select_related('post')
-        return CartItem.objects.filter(cart_id=self.kwargs['cart_pk']).select_related('post')
+        return CartItem.objects.filter(cart_id=self.kwargs['cart_pk']).select_related('post').order_by('post__title')
 
     def get_serializer_context(self):
         # cart_id = Cart.objects.only('id').get(uuid=self.kwargs['cart_pk'])
@@ -294,4 +294,4 @@ class OrderViewSet(ModelViewSet):
             return Order.objects.all()
         
         user_profile_id = UserProfile.objects.only('id').get(user_id=user.id)
-        return Order.objects.filter(user_profile_id=user_profile_id)
+        return Order.objects.filter(user_profile_id=user_profile_id).order_by('-placed_at')
